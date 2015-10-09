@@ -116,7 +116,9 @@ var Dropzone = React.createClass({
   },
 
   open: function() {
-    var fileInput = React.findDOMNode(this.refs.fileInput);
+    // Jeremy modifying for 0.12.2 reactjs compatibility
+    var fileInput = this.refs.fileInput.getDOMNode();
+    // var fileInput = React.findDOMNode(this.refs.fileInput);
     fileInput.value = null;
     fileInput.click();
   },
