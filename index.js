@@ -1,16 +1,21 @@
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var React = require('react');
 var accept = require('attr-accept');
 
 var Dropzone = React.createClass({
+  displayName: 'Dropzone',
 
-  getDefaultProps: function() {
+  getDefaultProps: function getDefaultProps() {
     return {
       disableClick: false,
       multiple: true
     };
   },
 
-  getInitialState: function() {
+  getInitialState: function getInitialState() {
     return {
       isDragActive: false
     };
@@ -31,14 +36,18 @@ var Dropzone = React.createClass({
 
     disableClick: React.PropTypes.bool,
     multiple: React.PropTypes.bool,
-    accept: React.PropTypes.string,
+    accept: React.PropTypes.string
   },
 
-  allFilesAccepted: function(files) {
-    return files.every(file => accept(file, this.props.accept))
+  allFilesAccepted: function allFilesAccepted(files) {
+    var _this = this;
+
+    return files.every(function (file) {
+      return accept(file, _this.props.accept);
+    });
   },
 
-  onDragEnter: function(e) {
+  onDragEnter: function onDragEnter(e) {
     e.preventDefault();
 
     // This is tricky. During the drag even the dataTransfer.files is null
@@ -59,11 +68,11 @@ var Dropzone = React.createClass({
     }
   },
 
-  onDragOver: function (e) {
+  onDragOver: function onDragOver(e) {
     e.preventDefault();
   },
 
-  onDragLeave: function(e) {
+  onDragLeave: function onDragLeave(e) {
     e.preventDefault();
 
     this.setState({
@@ -76,7 +85,7 @@ var Dropzone = React.createClass({
     }
   },
 
-  onDrop: function(e) {
+  onDrop: function onDrop(e) {
     e.preventDefault();
 
     this.setState({
@@ -109,13 +118,13 @@ var Dropzone = React.createClass({
     }
   },
 
-  onClick: function () {
+  onClick: function onClick() {
     if (!this.props.disableClick) {
       this.open();
     }
   },
 
-  open: function() {
+  open: function open() {
     // Jeremy modifying for 0.12.2 reactjs compatibility
     var fileInput = this.refs.fileInput.getDOMNode();
     // var fileInput = React.findDOMNode(this.refs.fileInput);
@@ -123,7 +132,7 @@ var Dropzone = React.createClass({
     fileInput.click();
   },
 
-  render: function() {
+  render: function render() {
 
     var className;
     if (this.props.className) {
@@ -151,7 +160,7 @@ var Dropzone = React.createClass({
         borderWidth: 2,
         borderColor: '#666',
         borderStyle: 'dashed',
-        borderRadius: 5,
+        borderRadius: 5
       };
       activeStyle = {
         borderStyle: 'solid',
@@ -161,36 +170,31 @@ var Dropzone = React.createClass({
 
     var appliedStyle;
     if (activeStyle && this.state.isDragActive) {
-      appliedStyle = {
-        ...style,
-        ...activeStyle
-      };
+      appliedStyle = _extends({}, style, activeStyle);
     } else {
-      appliedStyle = {
-        ...style
-      };
+      appliedStyle = _extends({}, style);
     };
 
-    return (
-      <div
-        className={className}
-        style={appliedStyle}
-        onClick={this.onClick}
-        onDragEnter={this.onDragEnter}
-        onDragOver={this.onDragOver}
-        onDragLeave={this.onDragLeave}
-        onDrop={this.onDrop}
-      >
-        {this.props.children}
-        <input
-          type='file'
-          ref='fileInput'
-          style={{ display: 'none' }}
-          multiple={this.props.multiple}
-          accept={this.props.accept}
-          onChange={this.onDrop}
-        />
-      </div>
+    return React.createElement(
+      'div',
+      {
+        className: className,
+        style: appliedStyle,
+        onClick: this.onClick,
+        onDragEnter: this.onDragEnter,
+        onDragOver: this.onDragOver,
+        onDragLeave: this.onDragLeave,
+        onDrop: this.onDrop
+      },
+      this.props.children,
+      React.createElement('input', {
+        type: 'file',
+        ref: 'fileInput',
+        style: { display: 'none' },
+        multiple: this.props.multiple,
+        accept: this.props.accept,
+        onChange: this.onDrop
+      })
     );
   }
 
